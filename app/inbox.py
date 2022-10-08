@@ -19,9 +19,9 @@ def show():
     db = get_db()
     userId= g.user['id']
     messages = db.execute(
-        'SELECT u.username As username, m.subject AS subjet, m.body AS body from (select * from message where to_id= ?', (userId)
+        'SELECT u.username As username, m.subject AS subject, m.body AS body from (select * from message where to_id= ?', (userId)
         ).fetchall()
-        #ORDER BY created DESC # cambio 
+       
     
 
     return render_template('inbox/show.html', messages=messages) # cambio
@@ -65,7 +65,7 @@ def send():
         else:
             db = get_db() # cambio
             db.execute(
-                'INSERT INTO menssage (from_id, to, subject, body)'
+                'INSERT INTO message (from_id, to, subject, body)'
                 ' VALUES (?, ?, ?, ?)',
                 (g.user['id'], userto['id'], subject, body)
             )

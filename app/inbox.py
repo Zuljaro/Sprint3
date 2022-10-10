@@ -19,8 +19,10 @@ def show():
     db = get_db()
     userId= g.user['id']
     messages = db.execute(
-        'SELECT u.username As username, m.subject AS subject, m.body AS body from (select * from message where to_id= ?', (userId)
-        ).fetchall()
+        'SELECT u.username AS username, m.subject AS subject, m.body AS body, m.created AS created'
+        ' FROM (select * from message where to_id=' + str(g.user['id']) + ') AS m JOIN User u ON  m.from_id = u.id'
+        ' ORDER BY created DESC'
+    ).fetchall()
        
     
 
@@ -65,7 +67,7 @@ def send():
         else:
             db = get_db() # cambio
             db.execute(
-                'INSERT INTO message (from_id, to, subject, body)'
+                'INSERT INTO message (from_id, to_id, subject, body)'
                 ' VALUES (?, ?, ?, ?)',
                 (g.user['id'], userto['id'], subject, body)
             )
